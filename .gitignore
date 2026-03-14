@@ -1,0 +1,41 @@
+# Переменные окружения
+.env
+*.env
+.env.local
+.env.backup
+
+# Виртуальное окружение
+venv/
+.venv/
+env/
+ENV/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+*.egg-info/
+.installed.cfg
+*.orig
+*.rej
+
+# Логи
+logs/
+*.log
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Django 
+media/           
+staticfiles/  
