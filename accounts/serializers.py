@@ -43,3 +43,22 @@ class RegisterSerializer(serializers.ModelSeralizer):
         validated_data.pop('password2')
         return User.objects.create_user(**validated_data)
 
+class LoginSerializer(serializers.Serializer):
+    """
+    Сериализатор для входа пользователя
+    """
+
+    email = serializers.EmailField(error_messages={'required': 'Email обязателен'})
+    password = serializers.CharField(write_only=True, error_messages={'required': 'Пароль обязателен'})
+
+    def validate(self, data):
+        email = data.get('email')
+        password = data.get('password')
+        try:
+            user = User.objects.get(email=email, is_active=True)
+        except User.DoesNotExist:
+            raise serializers.ValidationError("Неверные учётные данные")
+        if not user.check_password(password):
+            raise serializers.ValidationError("Неверные учётные данные")
+        data['user'] = user
+        return data
