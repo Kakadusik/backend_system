@@ -1,5 +1,4 @@
 from rest_framework import serializers
-
 from accounts.models import User
 
 
@@ -13,10 +12,34 @@ class RegisterSerializer(serializers.ModelSeralizer):
 
     class Meta:
         model = User
-        fields = ('email', 'first_name', 'last_name', 'patronymic', 'password', 'password2')
+        fields = ['email', 'first_name', 'last_name', 'patronymic', 'password', 'password2']
 
-        def validate(self, data):
-            if data['password'] != data['password2']:
-                raise serializers.ValidationError('Пароли не совпадают')
-            
+    def _validate_name_part(self, value, field_name):
+        """
+        Валидация имени или фамилии
+        """
+
+        if not value.strip():
+            raise serializers.ValidationError(f'{field_name} не может быть пустым или состоять из пробелов')
+        if any(char.isdigit() for char in value):
+            raise serializers.ValidationError(f'{field_name} не может содержать цифры')
+        return value
+
+    def validate_email(self, value):
+        return value.lower() # переводим email в нижний регистр
+
+    def validate_first_name(self, value):
+        return self._validate_name_part(value, 'Имя')
+    
+    def validate_last_name(self, value):
+        return self._validate_name_part(value, 'Фамилия')
+
+    def validate(self, data):
+        if data['password'] != data['password2']:
+            raise serializers.ValidationError({'password':'Пароли не совпадают'})
+        return data
+    
+    def create(self, validated_data):
+        validated_data.pop('password2')
+        return User.objects.create_user(**validated_data)
 
