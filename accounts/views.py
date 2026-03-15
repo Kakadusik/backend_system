@@ -5,12 +5,44 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from accounts.jwt import create_jwt_token
 from accounts.models import User
-from accounts.serializers import LoginSerializer, RegisterSerializer
+from accounts.serializers import LoginSerializer, RegisterSerializer, UserSerializer
+
+
+class ProfileView(APIView):
+    """
+    Представление для просмотр и обновления пользователя
+    """
+
+    permission_classes = [IsAuthenticated] # разрешаем только авторизованным пользователям
+
+    def get(self, request):
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)
+    
+    def patch(self, request):
+        serializer = UserSerializer(request.user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class ProfileDeleteView(APIView):
+    """
+    Представление для удаления пользователя
+    """
+
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request):
+        user = request.user
+        user.is_active = False # мягкое удаление
+        user.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class RegisterView(APIView):
     def post(self, request):
-        if request.data.user.is_authenticated:
-            return Response({'error': 'Пользователь уже зарегистрирован'}, status=status.HTTP_403_FORBIDDEN)
+        # if request.data.user.is_authenticated:
+        #    return Response({'error': 'Пользователь уже зарегистрирован'}, status=status.HTTP_403_FORBIDDEN)
         serializer = RegisterSerializer(data=request.data)
         if serializer.is_valid():
             try:
@@ -36,7 +68,7 @@ class LoginView(APIView):
         return Response(serializer.errors, status=400)
 
 class LogoutView(APIView):
-    permission_classes = [IsAuthenticated] # разрешаем только авторизованным пользователям
+    # permission_classes = [IsAuthenticated] # разрешаем только авторизованным пользователям
 
     def post(self, request):
         return Response({'message': 'Выход осуществлен успешно'}) # клиент должен удалить токен

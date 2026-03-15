@@ -2,6 +2,16 @@ from rest_framework import serializers
 from accounts.models import User
 
 
+class UserSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для пользователя
+    """
+
+    class Meta:
+        model = User
+        fields = ['id', 'email', 'first_name', 'last_name', 'patronymic', 'is_active']
+        read_only_fields = ['id', 'is_active']  # is_active нельзя менять через этот сериализатор
+
 class RegisterSerializer(serializers.ModelSerializer):
     """
     Сериализатор для регистрации пользователя
