@@ -2,7 +2,7 @@ from rest_framework import serializers
 from accounts.models import User
 
 
-class RegisterSerializer(serializers.ModelSeralizer):
+class RegisterSerializer(serializers.ModelSerializer):
     """
     Сериализатор для регистрации пользователя
     """

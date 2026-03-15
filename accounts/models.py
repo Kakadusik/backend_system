@@ -67,9 +67,12 @@ class User(AbstractBaseUser):
     def is_superuser(self):
         return False
     
+    @property
+    def is_authenticated(self):
+        return True
+    
     def has_perm(self, perm, obj=None):
         return False
     
     def has_module_perms(self, app_label):
         return False
-    
