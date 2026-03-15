@@ -1,0 +1,80 @@
+[
+    {
+        "model": "access_control.role",
+        "pk": 1,
+        "fields": {
+            "name": "admin",
+            "description": "Администратор со всеми правами"
+        }
+    },
+    {
+        "model": "access_control.role",
+        "pk": 2,
+        "fields": {
+            "name": "user",
+            "description": "Обычный пользователь"
+        }
+    },
+    {
+        "model": "access_control.businesselement",
+        "pk": 1,
+        "fields": {
+            "name": "product",
+            "description": "Товары в магазине"
+        }
+    },
+    {
+        "model": "access_control.businesselement",
+        "pk": 2,
+        "fields": {
+            "name": "order",
+            "description": "Заказы клиентов"
+        }
+    },
+    {
+        "model": "access_control.accessrule",
+        "pk": 1,
+        "fields": {
+            "role": 1,
+            "element": 1,
+            "can_read": true,
+            "can_read_all": true,
+            "can_create": true,
+            "can_update": true,
+            "can_update_all": true,
+            "can_delete": true,
+            "can_delete_all": true
+        }
+    },
+    {
+        "model": "access_control.accessrule",
+        "pk": 2,
+        "fields": {
+            "role": 2,
+            "element": 1,
+            "can_read": true,
+            "can_read_all": false,
+            "can_create": true,
+            "can_update": true,
+            "can_update_all": false,
+            "can_delete": true,
+            "can_delete_all": false
+        }
+    },
+    {
+        "model": "access_control.userrole",
+        "pk": 1,
+        "fields": {
+            "user": 1,
+            "role": 1
+        }
+    },
+    {
+        "model": "access_control.userrole",
+        "pk": 2,
+        "fields": {
+            "user": 2,
+            "role": 2
+        }
+    }
+]
