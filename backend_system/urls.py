@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/auth/', include('accounts.urls')),
     path('api/mock/', include('mock_business.urls')),
+    path('api/access/', include('access_control.urls')),
 ]

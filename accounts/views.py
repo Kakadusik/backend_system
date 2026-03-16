@@ -10,12 +10,12 @@ from accounts.serializers import LoginSerializer, RegisterSerializer, UserSerial
 
 class ProfileView(APIView):
     """
-    Представление для просмотр и обновления пользователя
+    Представление для просмотра и обновления пользователя
     """
 
-    permission_classes = [IsAuthenticated] # разрешаем только авторизованным пользователям
-
     def get(self, request):
+        if not request.user.is_authenticated:
+            return Response({'detail': 'Authentication required'}, status=401)
         serializer = UserSerializer(request.user)
         return Response(serializer.data)
     
@@ -40,9 +40,11 @@ class ProfileDeleteView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class RegisterView(APIView):
+    """
+    Представление для регистрации пользователя
+    """
+
     def post(self, request):
-        # if request.data.user.is_authenticated:
-        #    return Response({'error': 'Пользователь уже зарегистрирован'}, status=status.HTTP_403_FORBIDDEN)
         serializer = RegisterSerializer(data=request.data)
         if serializer.is_valid():
             try:
@@ -59,17 +61,23 @@ class RegisterView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class LoginView(APIView):
+    """
+    Представление для входа пользователя
+    """
+
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.validated_data['user']
             token = create_jwt_token(user)
             return Response({'token': token, 'user_id': user.id})
-        return Response(serializer.errors, status=400)
+        return Response(serializer.errors, status=401)
 
 class LogoutView(APIView):
-    # permission_classes = [IsAuthenticated] # разрешаем только авторизованным пользователям
-
+    """
+    Представление для выхода пользователя
+    """
+    
     def post(self, request):
         return Response({'message': 'Выход осуществлен успешно'}) # клиент должен удалить токен
     

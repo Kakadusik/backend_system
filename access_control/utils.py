@@ -7,12 +7,12 @@ def check_permission(user, element_name, action):
     if not user.is_authenticated:
         return False, False
 
-    # Получаем все роли пользователя
+    # получаем все роли пользователя
     user_roles = user.user_roles.values_list('role_id', flat=True)
     if not user_roles:
         return False, False
 
-    # Ищем правило для любой из ролей (можно усложнить: объединять права из нескольких ролей)
+    # ищем правило для любой из ролей
     rule = AccessRule.objects.filter(
         role_id__in=user_roles,
         element__name=element_name

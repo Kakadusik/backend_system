@@ -6,6 +6,7 @@ def create_jwt_token(user):
     """
     Генерирует JWT-токен для пользователя.
     """
+    
     now_utc = datetime.now(timezone.utc)
     payload = {
         'user_id': user.id,
